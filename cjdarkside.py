@@ -443,3 +443,79 @@ def post_score(df):
                                   .when(col("Day") == 5, col("predict_qty") + col("predict_qty")/2.5)
                                   .otherwise( col("predict_qty") ))
   return df
+
+# EVALUATION
+
+def evalEachClass(df, lower_bound, upper_bound, l):
+    all_c = df.count()
+    df = df.filter( (df.label  >= lower_bound) & (df.label  <= upper_bound)  )
+    print("count = ", df.count())
+        
+    predictionsDF  = persistedModel.transform(df)
+    predictionsDF.cache()
+    result_mae = 0
+    if df.count() == 0: result = [0,0,0,0]
+    for metricName in ['rmse','mse','r2','mae']:
+        evaluator = RegressionEvaluator(labelCol="label", predictionCol="predict_qty", metricName=metricName)
+        evaluator_rmse = RegressionEvaluator(labelCol="label", predictionCol="predict_qty", metricName='mae')
+        if(predictionsDF.count() == 0):
+            break
+        result = evaluator.evaluate(predictionsDF)
+        result_mae = evaluator_rmse.evaluate(predictionsDF)
+        #print ('%s = %g' % (metricName,result))
+        l.append('%s' % (result))
+    l.append(df.count())
+    print('Evaluate Done: Lower Bound: ',lower_bound,' ,Upper Bound: ',upper_bound, ' with error (mae): ', result_mae)
+
+    
+def to_Report1(df, name_csv):
+    list_range = ['1','2','3','4 to 6','7 to 10','11 to 15','16 to 25','26 to 40','41 to 60','61 to 100','101 to 200','201 to 400','401 to 700','701 to 1200','1201 to 1800','1801 to 3000']
+    d1 = {'evaluations': [l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l16]}
+    df2 = pd.DataFrame(d1)
+    df3 = pd.DataFrame(df2['evaluations'].values.tolist(), columns=['rmse','mse','r2','mae','count'])
+    df3['Range'] = pd.DataFrame(list_range)
+    df3['Range'] = df3['Range'].astype(object)
+    df3['all'] = df.count()
+    df3 = df3.set_index(df3['Range'])
+    df3 = df3[[ 'mae','rmse', 'mse', 'r2','count','all']]
+    df3.to_csv(name_csv)
+    print('--- Report1 Complete Done !!')
+    print(df3)
+    return df3
+ 
+def to_Report2(l, name_csv):    
+    new_df = pd.concat(l)
+    new_df.to_csv(name_csv)
+    print('--- Report2 Complete Done !!')
+    print(new_df)
+    return new_df
+
+def to_Clear(df):
+    predictionsDF_All  = persistedModel.transform(df)
+    predictionsDF_All2 = predictionsDF_All.withColumn( 'prediction_type', F.when( F.col("predict_qty") >= F.col("label"), 'Upper').otherwise('Lower') )
+    predictionsDF_All3 = predictionsDF_All2.withColumn('prediction_diff',abs(predictionsDF_All2.predict_qty - predictionsDF_All2.label))
+    predictionsDF_All3 = predictionsDF_All3.withColumn("prediction_diff", predictionsDF_All3["prediction_diff"].cast("double"))
+    return predictionsDF_All3
+
+    
+def evalEachClass2(df, lower, upper, l):
+    raw = df
+    df2 = df.filter( (df.label  >= lower) & (df.label  <= upper) & (df.prediction_type  == 'Lower') ).groupBy('prediction_type').count().toPandas()
+    df = df.filter( (df.label  >= lower) & (df.label  <= upper) & (df.prediction_type  == 'Lower') ).groupBy('prediction_type').mean().toPandas()
+    df['Range'] = '4-6'
+    df = df[['Range','prediction_type', 'avg(avgPriceDis)', 'avg(avgPrice)', 'avg(supPrice)', 'avg(predict_qty)', 'avg(prediction_diff)']]
+    df['count_of_each_part'] = df2['count'][0] if len(df2) > 0 else 'null'
+    df_lower = df
+    
+    l.append(df_lower)
+    
+    df = raw
+    df2 = df.filter( (df.label  >= lower) & (df.label  <= upper) & (df.prediction_type  == 'Upper')).groupBy('prediction_type').count().toPandas()
+    df = df.filter( (df.label  >= lower) & (df.label  <= upper) & (df.prediction_type  == 'Upper') ).groupBy('prediction_type').mean().toPandas()
+    df['Range'] = '4-6'
+    df = df[['Range','prediction_type', 'avg(avgPriceDis)', 'avg(avgPrice)', 'avg(supPrice)', 'avg(predict_qty)', 'avg(prediction_diff)']]
+    df['count_of_each_part'] = df2['count'][0] if len(df2) > 0 else 'null'
+    df_upper = df 
+    l.append(df_upper)
+    print('Evaluate Done: Lower Bound: ',lower,' ,Upper Bound: ',upper)
+
