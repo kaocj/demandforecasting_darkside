@@ -49,6 +49,8 @@ from datetime import date, timedelta
 
 from google.cloud import bigquery
 
+from pyspark.sql.functions import col, when
+
 import pandas as pd
 
 import time
@@ -432,3 +434,12 @@ pd.set_option('max_colwidth', -1) # to prevent truncating of columns in jupyter
 def count_column_types(spark_df):
     """Count number of columns per type"""
     return pd.DataFrame(spark_df.dtypes).groupby(1, as_index=False)[0].agg({'count':'count', 'names': lambda x: " | ".join(set(x))}).rename(columns={1:"type"})
+
+def post_score(df):
+  df = df.withColumn("predict_qty", when(col("Day") == 1, col("predict_qty") + col("predict_qty")/2)
+                                  .when(col("Day") == 2, col("predict_qty") + col("predict_qty")/2.5)
+                                  .when(col("Day") == 3, col("predict_qty") + col("predict_qty")/2.5)
+                                  .when(col("Day") == 4, col("predict_qty") + col("predict_qty")/2.5)
+                                  .when(col("Day") == 5, col("predict_qty") + col("predict_qty")/2.5)
+                                  .otherwise( col("predict_qty") ))
+  return df
