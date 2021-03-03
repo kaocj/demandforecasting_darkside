@@ -446,7 +446,7 @@ def post_score(df):
 
 # EVALUATION
 
-def evalEachClass(df, lower_bound, upper_bound, l):
+def evalEachClass(df, lower_bound, upper_bound, l, persistedModel):
     all_c = df.count()
     df = df.filter( (df.label  >= lower_bound) & (df.label  <= upper_bound)  )
     print("count = ", df.count())
