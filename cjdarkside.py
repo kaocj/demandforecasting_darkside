@@ -72,6 +72,14 @@ today = date.today()
 import warnings
 warnings.filterwarnings('ignore')
 
+from pyspark.sql import functions as F 
+
+def stratified_split_train_test(df, frac, label, join_on, seed=42):
+    fractions = df.select(label).distinct().withColumn("fraction", F.lit(frac)).rdd.collectAsMap()
+    df_frac = df.stat.sampleBy(label, fractions, seed)
+    df_remaining = df.join(df_frac, on=join_on, how="left_anti")
+    return df_frac, df_remaining
+
 def holiday(dm):
   if dm=='1-1': return 'NewYear'
   elif dm=='5-2':return 'ChineseDay'
