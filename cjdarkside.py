@@ -4,6 +4,8 @@ from pyspark.sql import SparkSession
 
 from pyspark.sql.functions import desc, asc
 
+from pyspark.sql.functions import udf
+
 from  pyspark.sql.functions import abs
 
 from pyspark.sql.functions import monotonically_increasing_id 
@@ -439,6 +441,7 @@ def clean_binary(df):
     df = df.cache()
 
     return df
+
 
 def extract_date(df):
     #df = df.na.fill('NORMAL',subset=['types'])
