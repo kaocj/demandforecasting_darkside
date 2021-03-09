@@ -496,6 +496,15 @@ def post_score_v2(df):
                                   .otherwise( col("predict_qty") ))
   return df
 
+def post_score_v3(df):
+  df = df.withColumn("predict_qty_final_post", when(col("DayofMonth") == 1, col("predict_qty_final") + col("predict_qty_final")/2)
+                                  .when(col("DayofMonth") == 2, col("predict_qty_final") + col("predict_qty_final")/2.5)
+                                  .when(col("DayofMonth") == 3, col("predict_qty_final") + col("predict_qty_final")/2.5)
+                                  .when(col("DayofMonth") == 4, col("predict_qty_final") + col("predict_qty_final")/2.5)
+                                  .when(col("DayofMonth") == 5, col("predict_qty_final") + col("predict_qty_final")/2.5)
+                                  .otherwise( col("predict_qty_final") ))
+  return df
+
 # EVALUATION
 
 def evalEachClass(df, lower_bound, upper_bound, l, m):
