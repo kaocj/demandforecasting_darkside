@@ -1,7 +1,3 @@
-from pyspark.sql import SQLContext
-sc = SparkContext.getOrCreate()
-sqlContext = SQLContext(sc)
-
 from google.cloud import bigquery
 from datetime import date, timedelta
 from pyspark.sql import SparkSession
@@ -70,6 +66,15 @@ from pyspark.sql.types import *
 import pandas as pd
 
 import time
+
+from pyspark.sql import functions as F
+from pyspark.ml.feature import OneHotEncoderEstimator, StringIndexer, VectorAssembler
+from pyspark.sql.types import IntegerType, StringType, StructType, DateType
+
+from pyspark.sql import SQLContext
+sc = SparkContext.getOrCreate()
+sqlContext = SQLContext(sc)
+
 start_time = time.time()
 
 spark = SparkSession.builder.master("local[*]").getOrCreate()
