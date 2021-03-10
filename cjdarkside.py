@@ -1,3 +1,7 @@
+from pyspark.sql import SQLContext
+sc = SparkContext.getOrCreate()
+sqlContext = SQLContext(sc)
+
 from google.cloud import bigquery
 from datetime import date, timedelta
 from pyspark.sql import SparkSession
