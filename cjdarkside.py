@@ -229,6 +229,33 @@ def map_weather_to_store():
   
   return df
 
+def one_hot_encoder_ProvinceEN(df,_input):
+    stringIndexer = StringIndexer(inputCol=_input, outputCol="ProvinceEN_idx")
+    model = stringIndexer.fit(df)
+    indexed = model.transform(df)
+    encoder = OneHotEncoder(dropLast=False, inputCol="ProvinceEN_idx", outputCol="ProvinceEN_vec")
+    encoded = encoder.transform(indexed)
+    df = encoded
+    return df
+
+def one_hot_encoder_DistrictEN(df,_input):
+    stringIndexer = StringIndexer(inputCol=_input, outputCol="DistrictEN_idx")
+    model = stringIndexer.fit(df)
+    indexed = model.transform(df)
+    encoder = OneHotEncoder(dropLast=False, inputCol="DistrictEN_idx", outputCol="DistrictEN_vec")
+    encoded = encoder.transform(indexed)
+    df = encoded
+    return df
+
+def one_hot_encoder_ZipCode(df,_input):
+    stringIndexer = StringIndexer(inputCol=_input, outputCol="ZipCode_idx")
+    model = stringIndexer.fit(df)
+    indexed = model.transform(df)
+    encoder = OneHotEncoder(dropLast=False, inputCol="ZipCode_idx", outputCol="ZipCode_vec")
+    encoded = encoder.transform(indexed)
+    df = encoded
+    return df
+    
 def one_hot_encoder_promotion(df,_input):
     stringIndexer = StringIndexer(inputCol=_input, outputCol="promotion_idx")
     model = stringIndexer.fit(df)
