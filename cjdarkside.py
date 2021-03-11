@@ -565,6 +565,119 @@ def evalEachClass(df, lower_bound, upper_bound, l, m):
     print('Evaluate Done: Lower Bound: ',lower_bound,' ,Upper Bound: ',upper_bound, ' with error (mae): ', result_mae)
 
 
+def evalEachClass_BinaryModel0(df, lower_bound, upper_bound, l, m1, m2):
+    all_c = df.count()
+    df = df.filter( (df.TotalQtySale == 0)  )
+    print("count = ", df.count())
+        
+    predictionsC  = m1.transform(df)
+    predictionsR  = m2.transform(df)
+
+    predictionsA = predictionsC.join(predictionsR,(predictionsC.SalDate == predictionsR.SalDate)&\
+                  (predictionsC.BranchCode == predictionsR.BranchCode)&\
+                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["predict_qty_lv2"])
+    predictionsA = predictionsA.withColumn("predict_qty_final", col("predict_bi_lv1")*col("predict_qty_lv2"))
+
+    predictionsA.cache()
+    result_mae = 0
+    if df.count() == 0: result = [0,0,0,0]
+    for metricName in ['rmse','mse','r2','mae']:
+        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName=metricName)
+        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName='mae')
+        if(predictionsA.count() == 0):
+            break
+        result = evaluator.evaluate(predictionsA)
+        result_mae = evaluator_rmse.evaluate(predictionsA)
+        #print ('%s = %g' % (metricName,result))
+        l.append('%s' % (result))
+    l.append(df.count())
+    print('Evaluate Done: Lower Bound: ',lower_bound,' , Upper Bound: ',upper_bound, ' with error (mae): ', result_mae)   
+
+
+def evalEachClass_BinaryModel1(df, lower_bound, upper_bound, l, m1, m2):
+    all_c = df.count()
+    df = df.filter( (df.TotalQtySale == 1)  )
+    print("count = ", df.count())
+        
+    predictionsC  = m1.transform(df)
+    predictionsR  = m2.transform(df)
+
+    predictionsA = predictionsC.join(predictionsR,(predictionsC.SalDate == predictionsR.SalDate)&\
+                  (predictionsC.BranchCode == predictionsR.BranchCode)&\
+                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["predict_qty_lv2"])
+    predictionsA = predictionsA.withColumn("predict_qty_final", col("predict_bi_lv1")*col("predict_qty_lv2"))
+
+    predictionsA.cache()
+    result_mae = 0
+    if df.count() == 0: result = [0,0,0,0]
+    for metricName in ['rmse','mse','r2','mae']:
+        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName=metricName)
+        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName='mae')
+        if(predictionsA.count() == 0):
+            break
+        result = evaluator.evaluate(predictionsA)
+        result_mae = evaluator_rmse.evaluate(predictionsA)
+        #print ('%s = %g' % (metricName,result))
+        l.append('%s' % (result))
+    l.append(df.count())
+    print('Evaluate Done: Lower Bound: ',lower_bound,' , Upper Bound: ',upper_bound, ' with error (mae): ', result_mae)   
+
+def evalEachClass_BinaryModel2(df, lower_bound, upper_bound, l, m1, m2):
+    all_c = df.count()
+    df = df.filter( (df.TotalQtySale == 2)  )
+    print("count = ", df.count())
+        
+    predictionsC  = m1.transform(df)
+    predictionsR  = m2.transform(df)
+
+    predictionsA = predictionsC.join(predictionsR,(predictionsC.SalDate == predictionsR.SalDate)&\
+                  (predictionsC.BranchCode == predictionsR.BranchCode)&\
+                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["predict_qty_lv2"])
+    predictionsA = predictionsA.withColumn("predict_qty_final", col("predict_bi_lv1")*col("predict_qty_lv2"))
+
+    predictionsA.cache()
+    result_mae = 0
+    if df.count() == 0: result = [0,0,0,0]
+    for metricName in ['rmse','mse','r2','mae']:
+        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName=metricName)
+        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName='mae')
+        if(predictionsA.count() == 0):
+            break
+        result = evaluator.evaluate(predictionsA)
+        result_mae = evaluator_rmse.evaluate(predictionsA)
+        #print ('%s = %g' % (metricName,result))
+        l.append('%s' % (result))
+    l.append(df.count())
+    print('Evaluate Done: Lower Bound: ',lower_bound,' , Upper Bound: ',upper_bound, ' with error (mae): ', result_mae)   
+
+def evalEachClass_BinaryModel3(df, lower_bound, upper_bound, l, m1, m2):
+    all_c = df.count()
+    df = df.filter( (df.TotalQtySale == 3)  )
+    print("count = ", df.count())
+        
+    predictionsC  = m1.transform(df)
+    predictionsR  = m2.transform(df)
+
+    predictionsA = predictionsC.join(predictionsR,(predictionsC.SalDate == predictionsR.SalDate)&\
+                  (predictionsC.BranchCode == predictionsR.BranchCode)&\
+                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["predict_qty_lv2"])
+    predictionsA = predictionsA.withColumn("predict_qty_final", col("predict_bi_lv1")*col("predict_qty_lv2"))
+
+    predictionsA.cache()
+    result_mae = 0
+    if df.count() == 0: result = [0,0,0,0]
+    for metricName in ['rmse','mse','r2','mae']:
+        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName=metricName)
+        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName='mae')
+        if(predictionsA.count() == 0):
+            break
+        result = evaluator.evaluate(predictionsA)
+        result_mae = evaluator_rmse.evaluate(predictionsA)
+        #print ('%s = %g' % (metricName,result))
+        l.append('%s' % (result))
+    l.append(df.count())
+    print('Evaluate Done: Lower Bound: ',lower_bound,' , Upper Bound: ',upper_bound, ' with error (mae): ', result_mae)   
+
 def evalEachClass_BinaryModel(df, lower_bound, upper_bound, l, m1, m2):
     all_c = df.count()
     df = df.filter( (df.TotalQtySale  >= lower_bound) & (df.TotalQtySale  <= upper_bound)  )
@@ -595,7 +708,7 @@ def evalEachClass_BinaryModel(df, lower_bound, upper_bound, l, m1, m2):
 
     
 def to_Report1(df, name_csv, list_criterea):
-    list_range = ['1','2','3','4 to 6','7 to 10','11 to 15','16 to 25','26 to 40','41 to 60','61 to 100','101 to 200','201 to 400','401 to 700','701 to 1200','1201 to 1800','1801 to 3000']
+    list_range = ['0','1','2','3','4 to 6','7 to 10','11 to 15','16 to 25','26 to 40','41 to 60','61 to 100','101 to 200','201 to 400','401 to 700','701 to 1200','1201 to 1800','1801 to 3000']
     d1 = {'evaluations': list_criterea}
     df2 = pd.DataFrame(d1)
     df3 = pd.DataFrame(df2['evaluations'].values.tolist(), columns=['rmse','mse','r2','mae','count'])
@@ -674,6 +787,93 @@ def evalEachClass2_BinaryClass(df, lower, upper, l):
     df = raw
     df2 = df.filter( (df.TotalQtySale  >= lower) & (df.TotalQtySale  <= upper) & (df.prediction_type  == 'Upper')).groupBy('prediction_type').count().toPandas()
     df = df.filter( (df.TotalQtySale  >= lower) & (df.TotalQtySale  <= upper) & (df.prediction_type  == 'Upper') ).groupBy('prediction_type').mean().toPandas()
+    df['Range'] = str(lower)+'-'+str(upper)
+    df = df[['Range','prediction_type', 'avg(avgPriceDis)', 'avg(avgPrice)', 'avg(supPrice)', 'avg(predict_qty)', 'avg(prediction_diff)']]
+    df['count_of_each_part'] = df2['count'][0] if len(df2) > 0 else 'null'
+    df_upper = df 
+    l.append(df_upper)
+    print('Evaluate Done: Lower Bound: ',lower,' ,Upper Bound: ',upper)
+
+
+def evalEachClass2_BinaryClass0(df, lower, upper, l):
+    raw = df
+    df2 = df.filter( (df.TotalQtySale == 0) & (df.prediction_type  == 'Lower') ).groupBy('prediction_type').count().toPandas()
+    df = df.filter( (df.TotalQtySale == 0) & (df.prediction_type  == 'Lower') ).groupBy('prediction_type').mean().toPandas()
+    df['Range'] = str(lower)+'-'+str(upper)
+    df = df[['Range','prediction_type', 'avg(avgPriceDis)', 'avg(avgPrice)', 'avg(supPrice)', 'avg(predict_qty)', 'avg(prediction_diff)']]
+    df['count_of_each_part'] = df2['count'][0] if len(df2) > 0 else 'null'
+    df_lower = df
+    
+    l.append(df_lower)
+    
+    df = raw
+    df2 = df.filter( (df.TotalQtySale  == 0) & (df.prediction_type  == 'Upper')).groupBy('prediction_type').count().toPandas()
+    df = df.filter( (df.TotalQtySale  == 0) & (df.prediction_type  == 'Upper') ).groupBy('prediction_type').mean().toPandas()
+    df['Range'] = str(lower)+'-'+str(upper)
+    df = df[['Range','prediction_type', 'avg(avgPriceDis)', 'avg(avgPrice)', 'avg(supPrice)', 'avg(predict_qty)', 'avg(prediction_diff)']]
+    df['count_of_each_part'] = df2['count'][0] if len(df2) > 0 else 'null'
+    df_upper = df 
+    l.append(df_upper)
+    print('Evaluate Done: Lower Bound: ',lower,' ,Upper Bound: ',upper)
+
+def evalEachClass2_BinaryClass1(df, lower, upper, l):
+    raw = df
+    df2 = df.filter( (df.TotalQtySale == 1) & (df.prediction_type  == 'Lower') ).groupBy('prediction_type').count().toPandas()
+    df = df.filter( (df.TotalQtySale == 1) & (df.prediction_type  == 'Lower') ).groupBy('prediction_type').mean().toPandas()
+    df['Range'] = str(lower)+'-'+str(upper)
+    df = df[['Range','prediction_type', 'avg(avgPriceDis)', 'avg(avgPrice)', 'avg(supPrice)', 'avg(predict_qty)', 'avg(prediction_diff)']]
+    df['count_of_each_part'] = df2['count'][0] if len(df2) > 0 else 'null'
+    df_lower = df
+    
+    l.append(df_lower)
+    
+    df = raw
+    df2 = df.filter( (df.TotalQtySale  == 1) & (df.prediction_type  == 'Upper')).groupBy('prediction_type').count().toPandas()
+    df = df.filter( (df.TotalQtySale  == 1) & (df.prediction_type  == 'Upper') ).groupBy('prediction_type').mean().toPandas()
+    df['Range'] = str(lower)+'-'+str(upper)
+    df = df[['Range','prediction_type', 'avg(avgPriceDis)', 'avg(avgPrice)', 'avg(supPrice)', 'avg(predict_qty)', 'avg(prediction_diff)']]
+    df['count_of_each_part'] = df2['count'][0] if len(df2) > 0 else 'null'
+    df_upper = df 
+    l.append(df_upper)
+    print('Evaluate Done: Lower Bound: ',lower,' ,Upper Bound: ',upper)
+
+
+def evalEachClass2_BinaryClass2(df, lower, upper, l):
+    raw = df
+    df2 = df.filter( (df.TotalQtySale == 2) & (df.prediction_type  == 'Lower') ).groupBy('prediction_type').count().toPandas()
+    df = df.filter( (df.TotalQtySale == 2) & (df.prediction_type  == 'Lower') ).groupBy('prediction_type').mean().toPandas()
+    df['Range'] = str(lower)+'-'+str(upper)
+    df = df[['Range','prediction_type', 'avg(avgPriceDis)', 'avg(avgPrice)', 'avg(supPrice)', 'avg(predict_qty)', 'avg(prediction_diff)']]
+    df['count_of_each_part'] = df2['count'][0] if len(df2) > 0 else 'null'
+    df_lower = df
+    
+    l.append(df_lower)
+    
+    df = raw
+    df2 = df.filter( (df.TotalQtySale  == 2) & (df.prediction_type  == 'Upper')).groupBy('prediction_type').count().toPandas()
+    df = df.filter( (df.TotalQtySale  == 2) & (df.prediction_type  == 'Upper') ).groupBy('prediction_type').mean().toPandas()
+    df['Range'] = str(lower)+'-'+str(upper)
+    df = df[['Range','prediction_type', 'avg(avgPriceDis)', 'avg(avgPrice)', 'avg(supPrice)', 'avg(predict_qty)', 'avg(prediction_diff)']]
+    df['count_of_each_part'] = df2['count'][0] if len(df2) > 0 else 'null'
+    df_upper = df 
+    l.append(df_upper)
+    print('Evaluate Done: Lower Bound: ',lower,' ,Upper Bound: ',upper)
+
+
+def evalEachClass2_BinaryClass3(df, lower, upper, l):
+    raw = df
+    df2 = df.filter( (df.TotalQtySale == 3) & (df.prediction_type  == 'Lower') ).groupBy('prediction_type').count().toPandas()
+    df = df.filter( (df.TotalQtySale == 3) & (df.prediction_type  == 'Lower') ).groupBy('prediction_type').mean().toPandas()
+    df['Range'] = str(lower)+'-'+str(upper)
+    df = df[['Range','prediction_type', 'avg(avgPriceDis)', 'avg(avgPrice)', 'avg(supPrice)', 'avg(predict_qty)', 'avg(prediction_diff)']]
+    df['count_of_each_part'] = df2['count'][0] if len(df2) > 0 else 'null'
+    df_lower = df
+    
+    l.append(df_lower)
+    
+    df = raw
+    df2 = df.filter( (df.TotalQtySale  == 3) & (df.prediction_type  == 'Upper')).groupBy('prediction_type').count().toPandas()
+    df = df.filter( (df.TotalQtySale  == 3) & (df.prediction_type  == 'Upper') ).groupBy('prediction_type').mean().toPandas()
     df['Range'] = str(lower)+'-'+str(upper)
     df = df[['Range','prediction_type', 'avg(avgPriceDis)', 'avg(avgPrice)', 'avg(supPrice)', 'avg(predict_qty)', 'avg(prediction_diff)']]
     df['count_of_each_part'] = df2['count'][0] if len(df2) > 0 else 'null'
