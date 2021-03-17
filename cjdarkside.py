@@ -378,6 +378,12 @@ def transform_welfare_flag_day(df):
 
 	return new_df
 
+def transform_welfare_flag_day_2(df):
+	matches = df["DayofMonth"].isin([1,2,3,4,5])
+	new_df = df.withColumn("welfareFlagDay", when(matches, "1").otherwise("0"))
+
+	return new_df
+
 def join_df_with_ps(df,ps):
 
   df = df.join(ps, (df.BranchCode == ps.BC2) & (df.MaterialCode == ps.MC2))  
