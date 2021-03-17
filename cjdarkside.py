@@ -163,8 +163,6 @@ def query_store_location():
   query_job = client.query(query, job_config=job_config)
   df = query_job.to_dataframe()
   
-
-
 def query_weather():
   # Configure the query job.
   client = bigquery.Client()
@@ -456,6 +454,25 @@ def clean(df):
     df = df.cache()
 
     return df
+
+def clean_basic(df):
+    #df = df.na.fill('NORMAL',subset=['types'])
+    df = df.dropna(how='all')
+    df = df.dropna()
+
+    df = df.withColumn("BranchCode", df["BranchCode"].cast("integer"))
+    df = df.withColumn("MaterialCode", df["MaterialCode"].cast('integer'))
+    df = df.withColumn("TotalQtySale", df["TotalQtySale"].cast('integer'))
+
+    df = df.withColumn("avgPriceDis", df["avgPriceDis"].cast('double'))
+    df = df.withColumn("avgPrice", df["avgPrice"].cast('double'))
+    df = df.withColumn("supPrice", df["supPrice"].cast('double'))
+    df = df.withColumn("totalNetSale", df["totalNetSale"].cast('double'))
+
+    df = df.cache()
+
+    return df
+
 
 def clean_binary(df):
     #df = df.na.fill('NORMAL',subset=['types'])
