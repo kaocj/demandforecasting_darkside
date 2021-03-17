@@ -497,6 +497,10 @@ def clean_binary(df):
     df = df.withColumn("supPrice", df["supPrice"].cast('double'))
     df = df.withColumn("totalNetSale", df["totalNetSale"].cast('double'))
 
+    df = df.withColumn("welfareFlag", df["welfareFlag"].cast('integer'))
+    df = df.withColumn("welfareFlagDay", df["welfareFlagDay"].cast('integer'))
+    df = df.withColumn("ZipCode", df["ZipCode"].cast('integer'))
+
     df = df.cache()
 
     return df
