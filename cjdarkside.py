@@ -505,6 +505,30 @@ def clean_binary(df):
 
     return df
 
+def clean_binary_2(df):
+    #df = df.na.fill('NORMAL',subset=['types'])
+    df = df.dropna(how='all')
+    df = df.dropna()
+
+    df = df.withColumn("BranchCode", df["BranchCode"].cast("integer"))
+    df = df.withColumn("MaterialCode", df["MaterialCode"].cast('integer'))
+    df = df.withColumn("TotalQtySale", df["TotalQtySale"].cast('integer'))
+
+    df = df.withColumn("label", df["label"].cast('integer'))
+    df = df.withColumn("Year", df["Year"].cast('integer'))
+
+    df = df.withColumn("avgPriceDis", df["avgPriceDis"].cast('double'))
+    df = df.withColumn("avgPrice", df["avgPrice"].cast('double'))
+    df = df.withColumn("supPrice", df["supPrice"].cast('double'))
+    df = df.withColumn("totalNetSale", df["totalNetSale"].cast('double'))
+
+    df = df.withColumn("welfareFlag", df["welfareFlag"].cast('integer'))
+    df = df.withColumn("welfareFlagDay", df["welfareFlagDay"].cast('integer'))
+    df = df.withColumn("ZipCode", df["ZipCode"].cast('integer'))
+
+    df = df.cache()
+
+    return df
 
 def extract_date(df):
     #df = df.na.fill('NORMAL',subset=['types'])
