@@ -163,6 +163,8 @@ def query_store_location():
   query_job = client.query(query, job_config=job_config)
   df = query_job.to_dataframe()
   
+
+
 def query_weather():
   # Configure the query job.
   client = bigquery.Client()
@@ -378,12 +380,6 @@ def transform_welfare_flag_day(df):
 
 	return new_df
 
-def transform_welfare_flag_day_2(df):
-	matches = df["DayofMonth"].isin([1,2,3,4,5])
-	new_df = df.withColumn("welfareFlagDay", when(matches, "1").otherwise("0"))
-
-	return new_df
-
 def join_df_with_ps(df,ps):
 
   df = df.join(ps, (df.BranchCode == ps.BC2) & (df.MaterialCode == ps.MC2))  
@@ -461,25 +457,6 @@ def clean(df):
 
     return df
 
-def clean_basic(df):
-    #df = df.na.fill('NORMAL',subset=['types'])
-    df = df.dropna(how='all')
-    df = df.dropna()
-
-    df = df.withColumn("BranchCode", df["BranchCode"].cast("integer"))
-    df = df.withColumn("MaterialCode", df["MaterialCode"].cast('integer'))
-    df = df.withColumn("TotalQtySale", df["TotalQtySale"].cast('integer'))
-
-    df = df.withColumn("avgPriceDis", df["avgPriceDis"].cast('double'))
-    df = df.withColumn("avgPrice", df["avgPrice"].cast('double'))
-    df = df.withColumn("supPrice", df["supPrice"].cast('double'))
-    df = df.withColumn("totalNetSale", df["totalNetSale"].cast('double'))
-
-    df = df.cache()
-
-    return df
-
-
 def clean_binary(df):
     #df = df.na.fill('NORMAL',subset=['types'])
     df = df.dropna(how='all')
@@ -496,69 +473,6 @@ def clean_binary(df):
     df = df.withColumn("avgPrice", df["avgPrice"].cast('double'))
     df = df.withColumn("supPrice", df["supPrice"].cast('double'))
     df = df.withColumn("totalNetSale", df["totalNetSale"].cast('double'))
-
-    df = df.withColumn("welfareFlag", df["welfareFlag"].cast('integer'))
-    df = df.withColumn("welfareFlagDay", df["welfareFlagDay"].cast('integer'))
-    df = df.withColumn("ZipCode", df["ZipCode"].cast('integer'))
-
-    df = df.cache()
-
-    return df
-
-def clean_binary_2(df):
-    #df = df.na.fill('NORMAL',subset=['types'])
-    df = df.dropna(how='all')
-    df = df.dropna()
-
-    df = df.withColumn("BranchCode", df["BranchCode"].cast("integer"))
-    df = df.withColumn("MaterialCode", df["MaterialCode"].cast('integer'))
-    df = df.withColumn("TotalQtySale", df["TotalQtySale"].cast('integer'))
-
-    df = df.withColumn("label", df["label"].cast('integer'))
-    df = df.withColumn("Year", df["Year"].cast('integer'))
-
-    df = df.withColumn("avgPriceDis", df["avgPriceDis"].cast('double'))
-    df = df.withColumn("avgPrice", df["avgPrice"].cast('double'))
-    df = df.withColumn("supPrice", df["supPrice"].cast('double'))
-    df = df.withColumn("totalNetSale", df["totalNetSale"].cast('double'))
-
-    df = df.withColumn("welfareFlag", df["welfareFlag"].cast('integer'))
-    df = df.withColumn("welfareFlagDay", df["welfareFlagDay"].cast('integer'))
-    df = df.withColumn("ZipCode", df["ZipCode"].cast('integer'))
-
-    df = df.cache()
-
-    return df
-
-def clean_binary_3(df):
-    #df = df.na.fill('NORMAL',subset=['types'])
-    df = df.dropna(how='all')
-    df = df.dropna()
-
-    df = df.withColumn("BranchCode", df["BranchCode"].cast("integer"))
-    df = df.withColumn("MaterialCode", df["MaterialCode"].cast('integer'))
-    df = df.withColumn("TotalQtySale", df["TotalQtySale"].cast('integer'))
-
-    df = df.withColumn("label", df["label"].cast('integer'))
-    df = df.withColumn("Year", df["Year"].cast('integer'))
-
-    df = df.withColumn("avgPriceDis", df["avgPriceDis"].cast('double'))
-    df = df.withColumn("avgPrice", df["avgPrice"].cast('double'))
-    df = df.withColumn("supPrice", df["supPrice"].cast('double'))
-    df = df.withColumn("totalNetSale", df["totalNetSale"].cast('double'))
-
-    df = df.withColumn("welfareFlag", df["welfareFlag"].cast('integer'))
-    df = df.withColumn("welfareFlagDay", df["welfareFlagDay"].cast('integer'))
-    df = df.withColumn("ZipCode", df["ZipCode"].cast('integer'))
-
-    df = df.withColumn("DoW_Num", df["DoW_Num"].cast('integer'))
-    df = df.withColumn("Total_Bill_Dow", df["Total_Bill_Dow"].cast('integer'))
-    df = df.withColumn("Total_SumQTY_Dow", df["Total_SumQTY_Dow"].cast('integer'))
-    df = df.withColumn("AVG_SumQTY_Dow", df["AVG_SumQTY_Dow"].cast('double'))
-    df = df.withColumn("MED_SumQTY_Dow", df["MED_SumQTY_Dow"].cast('double'))
-    df = df.withColumn("SD_SumQTY_Dow", df["SD_SumQTY_Dow"].cast('double'))
-    df = df.withColumn("NumWeekSale", df["NumWeekSale"].cast('integer'))
-    df = df.withColumn("HighQualityFlag", df["HighQualityFlag"].cast('integer'))
 
     df = df.cache()
 
