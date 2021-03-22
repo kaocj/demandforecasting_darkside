@@ -71,6 +71,8 @@ from pyspark.sql import functions as F
 from pyspark.ml.feature import OneHotEncoderEstimator, StringIndexer, VectorAssembler
 from pyspark.sql.types import IntegerType, StringType, StructType, DateType
 
+from pyspark.sql.functions import countDistinct
+
 from pyspark.sql import SQLContext
 sc = SparkContext.getOrCreate()
 sqlContext = SQLContext(sc)
