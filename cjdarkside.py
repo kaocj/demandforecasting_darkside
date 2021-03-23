@@ -602,6 +602,42 @@ def clean_binary_3(df):
 
     return df
 
+def clean_binary_4(df):
+    #df = df.na.fill('NORMAL',subset=['types'])
+    df = df.dropna(how='all')
+    df = df.dropna()
+
+    df = df.withColumn("BranchCode", df["BranchCode"].cast("integer"))
+    df = df.withColumn("MaterialCode", df["MaterialCode"].cast('integer'))
+    df = df.withColumn("TotalQtySale", df["TotalQtySale"].cast('integer'))
+
+    df = df.withColumn("label", df["label"].cast('integer'))
+    df = df.withColumn("Year", df["Year"].cast('integer'))
+
+    df = df.withColumn("avgPriceDis", df["avgPriceDis"].cast('double'))
+    df = df.withColumn("avgPrice", df["avgPrice"].cast('double'))
+    df = df.withColumn("supPrice", df["supPrice"].cast('double'))
+    df = df.withColumn("totalNetSale", df["totalNetSale"].cast('double'))
+
+    df = df.withColumn("welfareFlag", df["welfareFlag"].cast('integer'))
+    df = df.withColumn("welfareFlagDay", df["welfareFlagDay"].cast('integer'))
+    df = df.withColumn("ZipCode", df["ZipCode"].cast('integer'))
+
+    df = df.withColumn("DoW_Num", df["DoW_Num"].cast('integer'))
+    df = df.withColumn("Total_SumQTY_Dow", df["Total_SumQTY_Dow"].cast('integer'))
+    df = df.withColumn("AVG_SumQTY_Dow", df["AVG_SumQTY_Dow"].cast('double'))
+    df = df.withColumn("MED_SumQTY_Dow", df["MED_SumQTY_Dow"].cast('double'))
+    df = df.withColumn("SD_SumQTY_Dow", df["SD_SumQTY_Dow"].cast('double'))
+    df = df.withColumn("NumWeekSale", df["NumWeekSale"].cast('integer'))
+    df = df.withColumn("HighQualityFlag", df["HighQualityFlag"].cast('integer'))
+
+    df = df.withColumn("MostSalesUnit", df["MostSalesUnit"].cast('double'))
+    df = df.withColumn("MostSalesUnitFreq", df["MostSalesUnitFreq"].cast('double'))
+
+    df = df.cache()
+
+    return df
+
 def clean_binary_3_2(df):
     #df = df.na.fill('NORMAL',subset=['types'])
     df = df.dropna(how='all')
