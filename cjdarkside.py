@@ -26,7 +26,8 @@ from pyspark.sql.functions import col,sum
 
 from pyspark.ml import Pipeline, PipelineModel
 from pyspark.ml.classification import DecisionTreeClassifier, DecisionTreeClassificationModel
-from pyspark.ml.regression import RandomForestRegressor, GBTRegressor
+from pyspark.ml.regression import DecisionTreeRegressor, RandomForestRegressor, GBTRegressor
+
 from pyspark.ml.feature import StringIndexer, IndexToString, VectorAssembler,ChiSqSelector
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
