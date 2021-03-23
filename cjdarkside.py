@@ -631,7 +631,6 @@ def clean_binary_4(df):
     df = df.withColumn("NumWeekSale", df["NumWeekSale"].cast('integer'))
     df = df.withColumn("HighQualityFlag", df["HighQualityFlag"].cast('integer'))
 
-    df = df.withColumn("MostSalesUnit", df["MostSalesUnit"].cast('double'))
     df = df.withColumn("MostSalesUnitFreq", df["MostSalesUnitFreq"].cast('double'))
 
     df = df.cache()
