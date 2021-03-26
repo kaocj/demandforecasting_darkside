@@ -20,6 +20,8 @@ from pyspark.ml.evaluation import ClusteringEvaluator
 from pyspark.ml.feature import MinMaxScaler
 from pyspark.ml.clustering import KMeans
 
+from pyspark.sql.functions import ceil, col
+
 import pyspark.sql.functions as F
 from pyspark.sql.types import *
 from pyspark.sql.functions import col,sum
@@ -526,6 +528,22 @@ def clean_binary(df):
 
     return df
 
+def clean_basic2(df):
+    #df = df.na.fill('NORMAL',subset=['types'])
+    df = df.dropna(how='all')
+    df = df.dropna()
+
+    df = df.withColumn("BranchCode", df["BranchCode"].cast("integer"))
+    df = df.withColumn("MaterialCode", df["MaterialCode"].cast('integer'))
+
+    df = df.withColumn("avgPriceDis", df["avgPriceDis"].cast('double'))
+    df = df.withColumn("avgPrice", df["avgPrice"].cast('double'))
+    df = df.withColumn("supPrice", df["supPrice"].cast('double'))
+
+    df = df.cache()
+
+    return df
+
 def clean_binary_2(df):
     #df = df.na.fill('NORMAL',subset=['types'])
     df = df.dropna(how='all')
@@ -533,15 +551,12 @@ def clean_binary_2(df):
 
     df = df.withColumn("BranchCode", df["BranchCode"].cast("integer"))
     df = df.withColumn("MaterialCode", df["MaterialCode"].cast('integer'))
-    df = df.withColumn("TotalQtySale", df["TotalQtySale"].cast('integer'))
 
-    df = df.withColumn("label", df["label"].cast('integer'))
     df = df.withColumn("Year", df["Year"].cast('integer'))
 
     df = df.withColumn("avgPriceDis", df["avgPriceDis"].cast('double'))
     df = df.withColumn("avgPrice", df["avgPrice"].cast('double'))
     df = df.withColumn("supPrice", df["supPrice"].cast('double'))
-    df = df.withColumn("totalNetSale", df["totalNetSale"].cast('double'))
 
     df = df.withColumn("welfareFlag", df["welfareFlag"].cast('integer'))
     df = df.withColumn("welfareFlagDay", df["welfareFlagDay"].cast('integer'))
@@ -613,15 +628,12 @@ def clean_binary_4(df):
 
     df = df.withColumn("BranchCode", df["BranchCode"].cast("integer"))
     df = df.withColumn("MaterialCode", df["MaterialCode"].cast('integer'))
-    df = df.withColumn("TotalQtySale", df["TotalQtySale"].cast('integer'))
 
-    df = df.withColumn("label", df["label"].cast('integer'))
     df = df.withColumn("Year", df["Year"].cast('integer'))
 
     df = df.withColumn("avgPriceDis", df["avgPriceDis"].cast('double'))
     df = df.withColumn("avgPrice", df["avgPrice"].cast('double'))
     df = df.withColumn("supPrice", df["supPrice"].cast('double'))
-    df = df.withColumn("totalNetSale", df["totalNetSale"].cast('double'))
 
     df = df.withColumn("welfareFlag", df["welfareFlag"].cast('integer'))
     df = df.withColumn("welfareFlagDay", df["welfareFlagDay"].cast('integer'))
