@@ -478,6 +478,8 @@ def clean_basic(df):
     df = df.withColumn("MaterialCode", df["MaterialCode"].cast('integer'))
     df = df.withColumn("TotalQtySale", df["TotalQtySale"].cast('integer'))
 
+    df = df.withColumn("label", df["label"].cast('integer'))
+
     df = df.withColumn("avgPriceDis", df["avgPriceDis"].cast('double'))
     df = df.withColumn("avgPrice", df["avgPrice"].cast('double'))
     df = df.withColumn("supPrice", df["supPrice"].cast('double'))
