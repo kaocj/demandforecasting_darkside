@@ -47,7 +47,7 @@ from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
 
 from pyspark.ml.feature import CountVectorizer
-from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler
+from pyspark.ml.feature import StringIndexer, VectorAssembler
 
 from pyspark.sql.functions import when
 
@@ -73,8 +73,10 @@ import pandas as pd
 
 import time
 
+from pyspark.ml.feature import *
+
 from pyspark.sql import functions as F
-from pyspark.ml.feature import OneHotEncoderEstimator, StringIndexer, VectorAssembler
+from pyspark.ml.feature import StringIndexer, VectorAssembler
 from pyspark.sql.types import IntegerType, StringType, StructType, DateType
 
 from pyspark.sql.functions import countDistinct
