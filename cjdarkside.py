@@ -657,6 +657,8 @@ def clean_binary_4(df):
 
     return df
 
+
+    
 def clean_binary_3_2(df):
     #df = df.na.fill('NORMAL',subset=['types'])
     df = df.dropna(how='all')
@@ -742,12 +744,12 @@ def post_score_v2(df):
   return df
 
 def post_score_v3(df):
-  df = df.withColumn("predict_qty_final_post", when(col("DayofMonth") == 1, col("predict_qty_final") + col("predict_qty_final")/2)
-                                  .when(col("DayofMonth") == 2, col("predict_qty_final") + col("predict_qty_final")/2.5)
-                                  .when(col("DayofMonth") == 3, col("predict_qty_final") + col("predict_qty_final")/2.5)
-                                  .when(col("DayofMonth") == 4, col("predict_qty_final") + col("predict_qty_final")/2.5)
-                                  .when(col("DayofMonth") == 5, col("predict_qty_final") + col("predict_qty_final")/2.5)
-                                  .otherwise( col("predict_qty_final") ))
+  df = df.withColumn("pred_final_post", when(col("DayofMonth") == 1, col("pred_final") + col("pred_final")/2)
+                                  .when(col("DayofMonth") == 2, col("pred_final") + col("pred_final")/2.5)
+                                  .when(col("DayofMonth") == 3, col("pred_final") + col("pred_final")/2.5)
+                                  .when(col("DayofMonth") == 4, col("pred_final") + col("pred_final")/2.5)
+                                  .when(col("DayofMonth") == 5, col("pred_final") + col("pred_final")/2.5)
+                                  .otherwise( col("pred_final") ))
   return df
 
 # EVALUATION
@@ -784,15 +786,15 @@ def evalEachClass_BinaryModel0(df, lower_bound, upper_bound, l, m1, m2):
 
     predictionsA = predictionsC.join(predictionsR,(predictionsC.SalDate == predictionsR.SalDate)&\
                   (predictionsC.BranchCode == predictionsR.BranchCode)&\
-                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["predict_qty_lv2"])
-    predictionsA = predictionsA.withColumn("predict_qty_final", col("predict_bi_lv1")*col("predict_qty_lv2"))
+                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["pred_lv2"])
+    predictionsA = predictionsA.withColumn("pred_final", col("pred_lv1")*col("pred_lv2"))
 
     predictionsA.cache()
     result_mae = 0
     if df.count() == 0: result = [0,0,0,0]
     for metricName in ['rmse','mse','r2','mae']:
-        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName=metricName)
-        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName='mae')
+        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="pred_final", metricName=metricName)
+        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="pred_final", metricName='mae')
         if(predictionsA.count() == 0):
             break
         result = evaluator.evaluate(predictionsA)
@@ -813,15 +815,15 @@ def evalEachClass_BinaryModel1(df, lower_bound, upper_bound, l, m1, m2):
 
     predictionsA = predictionsC.join(predictionsR,(predictionsC.SalDate == predictionsR.SalDate)&\
                   (predictionsC.BranchCode == predictionsR.BranchCode)&\
-                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["predict_qty_lv2"])
-    predictionsA = predictionsA.withColumn("predict_qty_final", col("predict_bi_lv1")*col("predict_qty_lv2"))
+                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["pred_lv2"])
+    predictionsA = predictionsA.withColumn("pred_final", col("pred_lv1")*col("pred_lv2"))
 
     predictionsA.cache()
     result_mae = 0
     if df.count() == 0: result = [0,0,0,0]
     for metricName in ['rmse','mse','r2','mae']:
-        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName=metricName)
-        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName='mae')
+        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="pred_final", metricName=metricName)
+        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="pred_final", metricName='mae')
         if(predictionsA.count() == 0):
             break
         result = evaluator.evaluate(predictionsA)
@@ -841,15 +843,15 @@ def evalEachClass_BinaryModel2(df, lower_bound, upper_bound, l, m1, m2):
 
     predictionsA = predictionsC.join(predictionsR,(predictionsC.SalDate == predictionsR.SalDate)&\
                   (predictionsC.BranchCode == predictionsR.BranchCode)&\
-                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["predict_qty_lv2"])
-    predictionsA = predictionsA.withColumn("predict_qty_final", col("predict_bi_lv1")*col("predict_qty_lv2"))
+                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["pred_lv2"])
+    predictionsA = predictionsA.withColumn("pred_final", col("pred_lv1")*col("pred_lv2"))
 
     predictionsA.cache()
     result_mae = 0
     if df.count() == 0: result = [0,0,0,0]
     for metricName in ['rmse','mse','r2','mae']:
-        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName=metricName)
-        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName='mae')
+        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="pred_final", metricName=metricName)
+        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="pred_final", metricName='mae')
         if(predictionsA.count() == 0):
             break
         result = evaluator.evaluate(predictionsA)
@@ -869,15 +871,15 @@ def evalEachClass_BinaryModel3(df, lower_bound, upper_bound, l, m1, m2):
 
     predictionsA = predictionsC.join(predictionsR,(predictionsC.SalDate == predictionsR.SalDate)&\
                   (predictionsC.BranchCode == predictionsR.BranchCode)&\
-                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["predict_qty_lv2"])
-    predictionsA = predictionsA.withColumn("predict_qty_final", col("predict_bi_lv1")*col("predict_qty_lv2"))
+                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["pred_lv2"])
+    predictionsA = predictionsA.withColumn("pred_final", col("pred_lv1")*col("pred_lv2"))
 
     predictionsA.cache()
     result_mae = 0
     if df.count() == 0: result = [0,0,0,0]
     for metricName in ['rmse','mse','r2','mae']:
-        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName=metricName)
-        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName='mae')
+        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="pred_final", metricName=metricName)
+        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="pred_final", metricName='mae')
         if(predictionsA.count() == 0):
             break
         result = evaluator.evaluate(predictionsA)
@@ -897,15 +899,15 @@ def evalEachClass_BinaryModel(df, lower_bound, upper_bound, l, m1, m2):
 
     predictionsA = predictionsC.join(predictionsR,(predictionsC.SalDate == predictionsR.SalDate)&\
                   (predictionsC.BranchCode == predictionsR.BranchCode)&\
-                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["predict_qty_lv2"])
-    predictionsA = predictionsA.withColumn("predict_qty_final", col("predict_bi_lv1")*col("predict_qty_lv2"))
+                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["pred_lv2"])
+    predictionsA = predictionsA.withColumn("pred_final", col("pred_lv1")*col("pred_lv2"))
 
     predictionsA.cache()
     result_mae = 0
     if df.count() == 0: result = [0,0,0,0]
     for metricName in ['rmse','mse','r2','mae']:
-        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName=metricName)
-        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="predict_qty_final", metricName='mae')
+        evaluator = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="pred_final", metricName=metricName)
+        evaluator_rmse = RegressionEvaluator(labelCol="TotalQtySale", predictionCol="pred_final", metricName='mae')
         if(predictionsA.count() == 0):
             break
         result = evaluator.evaluate(predictionsA)
@@ -951,8 +953,8 @@ def to_Clear_BinaryModel(df, m1, m2):
 
     predictionsA = predictionsC.join(predictionsR,(predictionsC.SalDate == predictionsR.SalDate)&\
                   (predictionsC.BranchCode == predictionsR.BranchCode)&\
-                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["predict_qty_lv2"])
-    predictionsA = predictionsA.withColumn("predict_qty", col("predict_bi_lv1")*col("predict_qty_lv2"))
+                  (predictionsC.MaterialCode == predictionsR.MaterialCode)).select(predictionsC["*"],predictionsR["pred_lv2"])
+    predictionsA = predictionsA.withColumn("predict_qty", col("pred_lv1")*col("pred_lv2"))
 
     predictionsDF_All2 = predictionsA.withColumn( 'prediction_type', F.when( F.col("predict_qty") >= F.col("TotalQtySale"), 'Upper').otherwise('Lower') )
     predictionsDF_All3 = predictionsDF_All2.withColumn('prediction_diff',abs(predictionsDF_All2.predict_qty - predictionsDF_All2.TotalQtySale))
